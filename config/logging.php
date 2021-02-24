@@ -99,6 +99,52 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
+
+
+        /*
+        |--------------------------------------------------
+        | Custom Channels to seperate application log types
+        |--------------------------------------------------
+         */
+        'sentry' => [
+            'driver' => 'sentry',
+            'bubble' => true,
+        ],
+
+        'api' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/api.log')
+        ],
+
+        'auth' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/auth.log')
+        ],
+        
+        'db' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/db.log')
+        ],
+
+        'app' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/app.log')
+        ],
+
+        'email' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/email.log')
+        ],
+
+        'hack' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/hack.log')
+        ],
+
+        'test' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/test.log')
+        ],
     ],
 
 ];

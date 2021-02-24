@@ -67,7 +67,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Africa/Lagos',
 
     /*
     |--------------------------------------------------------------------------
@@ -175,6 +175,10 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        /**
+         * Custom providers
+         */
+        App\Providers\Custom\CustomProvider::class,
     ],
 
     /*
