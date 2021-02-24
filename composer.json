@@ -9,11 +9,16 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
+        "darkaonline/l5-swagger": "^8.0",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.12",
-        "laravel/tinker": "^2.5"
+        "laravel/passport": "^10.1",
+        "laravel/tinker": "^2.5",
+        "laravel/ui": "^3.1",
+        "sentry/sentry-laravel": "^2.2",
+        "spatie/laravel-csp": "^2.6"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
@@ -21,7 +26,8 @@
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.2",
         "nunomaduro/collision": "^5.0",
-        "phpunit/phpunit": "^9.3.3"
+        "phpunit/phpunit": "^9.3.3",
+        "barryvdh/laravel-debugbar": "^3.2"
     },
     "config": {
         "optimize-autoloader": true,
@@ -38,7 +44,11 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "files": [
+            "app/Helpers/responses.php",
+            "app/Helpers/utils.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
