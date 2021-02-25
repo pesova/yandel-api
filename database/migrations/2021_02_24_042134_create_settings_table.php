@@ -19,7 +19,6 @@ class CreateSettingsTable extends Migration
             $table->longText('privacy')->nullable();
             $table->longText('support_email')->nullable();
             $table->longText('support_phone')->nullable();
-            $table->longText('terms')->nullable();
             $table->timestamps();
         });
     }

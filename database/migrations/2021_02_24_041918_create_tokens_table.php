@@ -20,6 +20,7 @@ class CreateTokensTable extends Migration
             $table->string('event', 30);
             $table->string('token', 60);
             $table->boolean('verified')->default(false);
+            $table->timestamp('expires_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
 

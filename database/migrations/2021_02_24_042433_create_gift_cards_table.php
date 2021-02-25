@@ -30,7 +30,6 @@ class CreateGiftCardsTable extends Migration
 
             $table->timestamps();
             $table->softDeletes();
-            $table->timestamps();
         });
     }
 
