@@ -114,3 +114,4 @@ Homestead.json
 /public/.htaccess
 storage/*.key
 storage/api-docs
+storage/debugbar

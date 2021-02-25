@@ -49,4 +49,13 @@ class User extends Authenticatable
     public function findForPassport($identifier) {
         return $this->where('phone', $identifier)->orWhere('email', $identifier)->first();
     }
+    
+    /**
+     * Direct relationship
+     * - A user can have many notifications
+     */
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
 }

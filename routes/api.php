@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\NotificationController;
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\NotificationController;
@@ -41,6 +41,17 @@ Route::group(['prefix' => 'v1'], function () {
         });
     });
 
+    /*
+    |--------------------------------------------------------------------------
+    | NOTIFICATION ROUTES
+    |--------------------------------------------------------------------------
+    */
+    Route::group(['prefix'=>'notifications', 'middleware'=>'auth:api'], function(){
+        Route::get('/', [NotificationController::class, 'getNotifications']);
+        Route::put('/read', [NotificationController::class, 'markAsRead']);
+        Route::delete('/', [NotificationController::class, 'deleteNotifications']);
+        Route::delete('/{id}', [NotificationController::class, 'deleteNotifications']);
+    });
 });
 
 
