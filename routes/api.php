@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +14,30 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['prefix' => 'v1'], function () {
+    /*
+    |--------------------------------------------------------------------------
+    | AUTHENTICATION ROUTES
+    |--------------------------------------------------------------------------
+    */
+    Route::group(['prefix'=>'auth'], function(){
+        // Guest Registration & Login
+        Route::post('/otp', [AuthController::class, 'sendRegisterationOtp']);
+        Route::post('/register', [AuthController::class, 'register']);
+        Route::post('/login', [AuthController::class, 'login']);
+
+        // Guest Password reset
+        Route::post('/password/reset', [AuthController::class, 'requestPasswordReset']);
+        Route::get('/password/reset/{token}', [AuthController::class, 'findPasswordResetToken']);
+        Route::put('/password/reset', [AuthController::class, 'resetPassword']);
+
+        // Protected
+        Route::group(['middleware'=>'auth:api'], function(){
+            Route::post('/logout', [AuthController::class, 'logout']);
+            Route::put('/password/update', [AuthController::class, 'updatePassword']);
+        });
+    });
+
 });
+
+

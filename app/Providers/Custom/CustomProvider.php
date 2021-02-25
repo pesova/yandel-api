@@ -29,6 +29,9 @@ class CustomProvider extends ServiceProvider
         // Binding Notification Interface to Notification Service
         $this->app->bind('App\Contracts\NotificationServiceInterface', 'App\Services\NotificationService');
 
+        // Binding Token Interface to Token Service
+        $this->app->bind('App\Contracts\TokenServiceInterface', 'App\Services\TokenService');
+
     }
 
     /**
