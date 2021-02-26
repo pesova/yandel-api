@@ -19,8 +19,8 @@ class CreateGiftCardsTable extends Migration
             $table->string('slug')->index();
             $table->string('asset_code')->constrained();
             $table->text('image_url')->constrained();
-            $table->json('acceptable_currencies')->nullable();
-            $table->json('acceptable_types')->nullable();
+            $table->longText('acceptable_currencies')->nullable();
+            $table->longText('acceptable_types')->nullable();
             $table->decimal('buy_rate', 19,4)->default(0);
             $table->decimal('sell_rate', 19,4)->default(0);
             $table->decimal('buy_margin', 19,4)->default(0);

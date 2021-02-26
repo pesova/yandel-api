@@ -3,8 +3,6 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\NotificationController;
 
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
