@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+// use App\Http\Controllers\UserController;
 use App\Http\Controllers\NotificationController;
 
 
@@ -50,6 +51,15 @@ Route::group(['prefix' => 'v1'], function () {
         Route::delete('/', [NotificationController::class, 'deleteNotifications']);
         Route::delete('/{id}', [NotificationController::class, 'deleteNotifications']);
     });
+
+    Route::group(['prefix'=>'user', 'middleware'=>'auth:api'], function(){
+
+        Route::put('/update', 'UserController@updateUser');
+
+    });
+
+    Route::get('user/{id}', 'UserController@getUserInfo');
+
 });
 
 

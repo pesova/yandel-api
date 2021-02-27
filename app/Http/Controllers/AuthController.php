@@ -409,6 +409,7 @@ class AuthController extends Controller
      */
     public function updatePassword(Request $request)
     {
+        dd($request->all());
         $req = $this->authService->updatePassword(
             $request->current_password, $request->new_password
         );

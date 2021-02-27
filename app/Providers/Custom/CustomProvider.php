@@ -32,6 +32,11 @@ class CustomProvider extends ServiceProvider
         // Binding Token Interface to Token Service
         $this->app->bind('App\Contracts\TokenServiceInterface', 'App\Services\TokenService');
 
+
+        
+        // Binding User Interface to User Service
+        $this->app->bind('App\Contracts\UserServiceInterface', 'App\Services\UserService');
+
     }
 
     /**
