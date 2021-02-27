@@ -31,19 +31,20 @@ class UserController extends Controller
         return success( $req['message'] ?? 'User Updated Successfully', $req['data'] ?? $req );
     }
 
-    public function updateProfile_picture( Request $request ){
-    
+    public function updateProfilePicture( Request $request ){
+        $req = $this->userService->updateProfilePicture(
+            $request->all(),
+        );
+
+        return success( $req['message'] ?? 'You successfully changed your profile pics', $req['data'] ?? $req );
     }
     
     public function getUserInfo($user_id){
-        DB::beginTransaction();
         try{
             $req = $this->userService->getUserInfo( $user_id );
             
-            DB::commit();
         }
         catch(\Throwable $e){
-            DB::rollback();
             throw $e;
         }
 

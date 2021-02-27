@@ -22,7 +22,7 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $fillable = ['email', 'name', 'phone', 'password'];
+    protected $fillable = ['email', 'name', 'phone', 'password', 'bvn'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -57,5 +57,18 @@ class User extends Authenticatable
     public function notifications()
     {
         return $this->hasMany(Notification::class);
+    }
+
+    /**
+     * Get the user's bvn.
+     *
+     * @param  int  $value
+     * @return int
+     */
+    public function getBvnAttribute($value)
+    {
+        $mask_number =  str_repeat("*", strlen($value)-4) . substr($value, -4);
+        
+        return $mask_number;
     }
 }

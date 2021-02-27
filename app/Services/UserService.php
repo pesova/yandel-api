@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use DB;
 use Auth;
 use App\Models\User;
 use App\Exceptions\UserServiceException;
@@ -11,6 +12,9 @@ use App\Contracts\UserServiceInterface;
 
 class UserService extends BaseService implements UserServiceInterface{
 
+
+    private $user, $logChannel = 'auth';
+
     public function __construct( 
         User $user
     )
@@ -19,44 +23,64 @@ class UserService extends BaseService implements UserServiceInterface{
     }
 
     public function updateUser( array $request){
-        // dd($request['name'], Auth::user()->id);
         $user = $this->find(Auth::user()->id)->firstOrFail();
-        // dd($user);
 
-        if (isset($request['name'])) {
-            $name = $request['name'];
-            $user->name = $name;
+        try {
+            
+            if (empty($request['name']) && empty($request['email']) && empty($request['phone']) && empty($request['bvn'])) {
+                throw new UserServiceException('No Parameter specified');
+            }
+            if ($user && $user->update($request)) {
+                // trigger user updated event
+                event( new UserUpdated($user) );
+    
+                return ["user"=> $user];
+            }else {
+                throw new UserServiceException('No Parameter specified');
+            } 
+        } catch (\Throwable $e) {
+            \Log::channel($this->logChannel)->error($e->getMessage());
+            throw $e;
         }
-
-        if (isset($request['bvn'])) {
-            $bvn = $request['bvn'];
-            $user->bvn = $bvn;
-        }
-
-        if (isset($request['email'])) {
-            $email = $request['email'];
-            $user->email = $email;
-        }
-
-        if (isset($request['phone'])) {
-            $phone = $request['phone'];
-            $user->phone = $phone;
-        }
-        if (!empty($name)||!empty($email)||!empty($phone)||!empty($bvn)) {
-            $user->save();
-            // trigger user updated event
-            event( new UserUpdated($user) );
-
-        return ["user"=> $user];
-        }else {
-            throw new UserServiceException('No Parameter specified');
-        }
-     
+            
 
     }
     
-    public function updateProfile_picture( array $params ){
+    public function updateProfilePicture( array $request ){
+        $user = $this->find(Auth::user()->id)->firstOrFail();
+
+        if ($user) {
+            DB::beginTransaction();
+            try {
+                if ($request->file('avatar_url') !== null) {
+
+                    $image = $request->file('avatar_url');
+                    $fileName = saveImage($image, 'profile_pics');
     
+                    $user->avatar_url = $fileName;
+
+                    if ($user->save()) {
+                        
+                        DB::commit();
+                        
+                        return ["user"=> $user];
+                    } else {
+                        DB::rollback();
+                        throw new UserServiceException('Something went wrong, try again later');
+                    }
+
+                }else {
+                    throw new UserServiceException('Image file Not found');
+
+                }
+
+            } catch(\Throwable $e){
+                DB::rollback();
+                \Log::channel($this->logChannel)->error($e->getMessage());
+                throw $e;
+            }
+        }
+
     }
     
     public function getUserInfo( $user_id = null ){
@@ -65,23 +89,12 @@ class UserService extends BaseService implements UserServiceInterface{
             "user$user_id must be  numeric or integer. ".gettype($user_id).' given.'
         );
 
-        if($user_id);
-
         $user = $this->find($user_id)->firstOrFail();
-        if (!empty($user->bvn)) {
-            $bvn = $this->maskbvn($user->bvn);
-            $user->setAttribute('userbvn', $bvn);
-        }
-
+        $bvn = $user->bvn;
+        $user->setAttribute('userbvn', $bvn);
 
         return $user;
     }
 
-    public function maskbvn($number){
-    
-        $mask_number =  str_repeat("*", strlen($number)-4) . substr($number, -4);
-        
-        return $mask_number;
-    }
 }
 
