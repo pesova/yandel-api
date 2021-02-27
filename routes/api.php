@@ -56,6 +56,8 @@ Route::group(['prefix' => 'v1'], function () {
 
         Route::put('/', 'UserController@updateUser');
 
+        Route::post('/profile_pic', 'UserController@updateProfilePicture');
+
     });
 
     Route::get('user/{id}', 'UserController@getUserInfo');

@@ -1,5 +1,7 @@
 <?php
 
+use Intervention\Image\Facades\Image;
+
 /**
  * Function for generating random strings
  * which could be alphabets, integer or a mixed

@@ -26,7 +26,7 @@ class UserService extends BaseService implements UserServiceInterface{
         $user = $this->find(Auth::user()->id)->firstOrFail();
 
         try {
-            
+
             if (empty($request['name']) && empty($request['email']) && empty($request['phone']) && empty($request['bvn'])) {
                 throw new UserServiceException('No Parameter specified');
             }
@@ -52,12 +52,17 @@ class UserService extends BaseService implements UserServiceInterface{
         if ($user) {
             DB::beginTransaction();
             try {
-                if ($request->file('avatar_url') !== null) {
+                
+                if ($request['avatar_url'] !== null) {
 
-                    $image = $request->file('avatar_url');
-                    $fileName = saveImage($image, 'profile_pics');
+                    $image = $request['avatar_url'];
+                    $fileName = pathinfo($image->getClientOriginalName(),PATHINFO_FILENAME);
+                    $extension = $image->getClientOriginalExtension();
+                    $fileNameToStore = $fileName."_".time(). ".".$extension;
+                    $path = $request['avatar_url']->storeAs('public/profile_pics/',$fileNameToStore);
+        
     
-                    $user->avatar_url = $fileName;
+                    $user->avatar_url = $fileNameToStore;
 
                     if ($user->save()) {
                         
