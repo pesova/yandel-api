@@ -69,6 +69,6 @@ class User extends Authenticatable
     {
         $mask_number =  str_repeat("*", strlen($value)-4) . substr($value, -4);
         
-        return $mask_number;
+        return $mask_number ?? 'NULL';
     }
 }

@@ -35,12 +35,9 @@ class UserService extends BaseService implements UserServiceInterface{
                 event( new UserUpdated($user) );
     
                 return ["user"=> $user];
-            }else {
-                throw new UserServiceException('No Parameter specified');
-            } 
+            }
         } catch (\Throwable $e) {
-            \Log::channel($this->logChannel)->error($e->getMessage());
-            throw $e;
+            handleThrowable($e);
         }
             
 
@@ -56,11 +53,7 @@ class UserService extends BaseService implements UserServiceInterface{
                 if ($request['avatar_url'] !== null) {
 
                     $image = $request['avatar_url'];
-                    $fileName = pathinfo($image->getClientOriginalName(),PATHINFO_FILENAME);
-                    $extension = $image->getClientOriginalExtension();
-                    $fileNameToStore = $fileName."_".time(). ".".$extension;
-                    $path = $request['avatar_url']->storeAs('public/profile_pics/',$fileNameToStore);
-        
+                    $fileNameToStore = saveImage($image, 'profile_pics');        
     
                     $user->avatar_url = $fileNameToStore;
 
@@ -91,14 +84,15 @@ class UserService extends BaseService implements UserServiceInterface{
     public function getUserInfo( $user_id = null ){
         if($user_id && ! is_numeric($user_id))
         throw new \InvalidArgumentException(
-            "user$user_id must be  numeric or integer. ".gettype($user_id).' given.'
+            "user $user_id must be  numeric or integer. ".gettype($user_id).' given.'
         );
 
-        $user = $this->find($user_id)->firstOrFail();
-        $bvn = $user->bvn;
-        $user->setAttribute('userbvn', $bvn);
-
+        $user = $this->find($user_id)->first();
+        if (!$user)
+            throw new UserServiceException('User Not FOund');
         return $user;
+
+        
     }
 
 }
