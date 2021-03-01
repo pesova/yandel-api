@@ -7,6 +7,6 @@ interface SettingServiceInterface{
 
     public function getLegal();
 
-    public function contactSupport(array $params);
+    public function contactSupport(string $subject, string $message);
 
 }

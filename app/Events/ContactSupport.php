@@ -14,14 +14,16 @@ class ContactSupport
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    public $message, $subject;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($subject, $message)
     {
-        //
+        $this->subject = $subject;
+        $this->message = $message;
     }
 
     /**
