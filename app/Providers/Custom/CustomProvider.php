@@ -39,6 +39,9 @@ class CustomProvider extends ServiceProvider
         // Binding Setting Interface to Setting Service
         $this->app->bind('App\Contracts\SettingServiceInterface', 'App\Services\SettingService');
 
+         // Binding Coupon Interface to Coupon Service
+         $this->app->bind('App\Contracts\CouponServiceInterface', 'App\Services\CouponService');
+
     }
 
     /**
