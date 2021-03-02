@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateGiftCardsTable extends Migration
+class CreateCouponsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,20 @@ class CreateGiftCardsTable extends Migration
      */
     public function up()
     {
-        Schema::create('gift_cards', function (Blueprint $table) {
+        Schema::create('coupons', function (Blueprint $table) {
             $table->id();
             $table->string('name')->index();
             $table->string('slug')->index();
-            $table->string('asset_code')->constrained();
-            $table->text('image_url')->constrained();
-            $table->longText('acceptable_currencies')->nullable();
-            $table->longText('acceptable_types')->nullable();
-            $table->decimal('buy_rate', 19,4)->default(0);
-            $table->decimal('sell_rate', 19,4)->default(0);
+            $table->string('code')->nullable();
+            $table->text('image_url')->nullable();
+            $table->json('currencies')->nullable();
+            $table->json('types')->nullable();
+            $table->decimal('buy', 19,4)->default(0);
+            $table->decimal('sell', 19,4)->default(0);
             $table->decimal('buy_margin', 19,4)->default(0);
             $table->decimal('sell_margin', 19,4)->default(0);
+            $table->decimal('deposit_fee', 19,4)->default(0);
+            $table->decimal('withdrawal_fee', 19,4)->default(0);
             $table->boolean('is_available')->default(true);
             $table->boolean('is_visible')->default(true);
 
@@ -40,6 +42,6 @@ class CreateGiftCardsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('gift_cards');
+        Schema::dropIfExists('coupons');
     }
 }
