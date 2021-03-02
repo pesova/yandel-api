@@ -37,6 +37,9 @@ class CustomProvider extends ServiceProvider
         // Binding User Interface to User Service
         $this->app->bind('App\Contracts\UserServiceInterface', 'App\Services\UserService');
 
+        // Binding Setting Interface to Setting Service
+        $this->app->bind('App\Contracts\SettingServiceInterface', 'App\Services\SettingService');
+
     }
 
     /**
