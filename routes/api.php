@@ -35,6 +35,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::group(['middleware'=>'auth:api'], function(){
             Route::post('/logout', 'AuthController@logout');
             Route::put('/password/update', 'AuthController@updatePassword');
+            Route::post('/contact', 'SettingController@contactSupport');
         });
     });
 
@@ -64,9 +65,12 @@ Route::group(['prefix' => 'v1'], function () {
 
     Route::group(['prefix'=>'user', 'middleware'=>'auth:api'], function(){
         Route::get('/{id}', 'UserController@getUserInfo');
+        Route::get('/{id}', 'UserController@getUserInfo');
         Route::put('/', 'UserController@updateUser');
         Route::post('/profile_pic', 'UserController@updateProfilePicture');
     });
+    
+    Route::get('/legal', 'SettingController@getLegal');
 });
 
 
