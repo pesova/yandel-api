@@ -39,6 +39,16 @@ class CustomProvider extends ServiceProvider
         // Binding Setting Interface to Setting Service
         $this->app->bind('App\Contracts\SettingServiceInterface', 'App\Services\SettingService');
 
+        $this->app->bind('payment-gateway', 'App\Services\Payment\PaymentGatewayManager');
+
+        $this->app->bind('App\Contracts\PaymentDriverInterface', 'App\Services\Payment\PaymentGatewayManager');
+        
+        $this->app->bind('App\Contracts\PaymentGatewayInterface', 'App\Services\Payment\PaymentGatewayManager');
+
+        $this->app->bind('App\Contracts\CardServiceInterface', 'App\Services\CardService');
+        
+        $this->app->bind('App\Contracts\BankServiceInterface', 'App\Services\BankService');
+
     }
 
     /**

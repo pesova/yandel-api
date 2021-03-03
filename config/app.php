@@ -231,6 +231,8 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 
+        // custom facades
+        'PaymentGateway' => \App\Facades\PaymentGateway::class,
     ],
 
 ];

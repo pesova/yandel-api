@@ -71,6 +71,22 @@ Route::group(['prefix' => 'v1'], function () {
     });
     
     Route::get('/legal', 'SettingController@getLegal');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | BANK ROUTES
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/list-banks', 'BankController@listBanks');
+    Route::get('/banks/enquiry', 'BankController@bankAccountEnquiry');
+    Route::group(['prefix'=>'/banks', 'middleware'=>'auth:api'], function(){
+        Route::post('/', 'BankController@addBankAccount');
+        Route::get('/', 'BankController@listBankAccounts');
+        Route::get('/{bank_id}', 'BankController@findBankAccount');
+        Route::delete('/{bank_id}', 'BankController@deleteBankAccount');
+    });
+
 });
 
 
