@@ -22,7 +22,7 @@ class CreateOrdersTable extends Migration
             $table->unsignedBigInteger('order_id');
             $table->string('currency')->nullable();
             $table->string('coupon_type')->nullable();
-            $table->decimal('volumn', 19, 4);
+            $table->decimal('volume', 19, 4);
             $table->decimal('rate', 19, 4)->default(0);
             $table->decimal('unit_price', 19, 4)->default(0);
             $table->decimal('total_payable', 19, 4);
