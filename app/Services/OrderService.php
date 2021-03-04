@@ -7,13 +7,13 @@ use Auth;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\Coupon;
-use App\Exceptions\TransactionServiceException;
-use App\Events\TransactionCreated;
-use App\Contracts\TransactionServiceInterface;
+use App\Exceptions\OrderServiceException;
+use App\Events\OrderCreated;
+use App\Contracts\OrderServiceInterface;
 
 
 
-class TransactionService extends BaseService implements TransactionServiceInterface{
+class OrderService extends BaseService implements OrderServiceInterface{
 
 
     private $order;
@@ -25,7 +25,7 @@ class TransactionService extends BaseService implements TransactionServiceInterf
         $this->model = $order;
     }
 
-    public function list_orders(array $params = null){
+    public function listOrders(array $params = null){
         $user = Auth::user();
 
         if (isset($params['order_type'])) {
@@ -37,12 +37,13 @@ class TransactionService extends BaseService implements TransactionServiceInterf
         }
 
         return $user->orders;
+
     }
 
     public function buy(array $request){
         $user = Auth::user();
             
-        DB::beginTransaction();
+        DB::beginOrder();
         try {
             $order = new Order();
             $coupon = Coupon::where('id', $request['order_id'])->first();
@@ -69,19 +70,14 @@ class TransactionService extends BaseService implements TransactionServiceInterf
             $order->fee = $request['fee']  ?? 0;
             $order->remark = $request['remark'] ?? NULL;
 
-            if ($order->save()) {
-                DB::commit();
-                // trigger Transaction event
-                event( new TransactionCreated($order));
-                
-                return ["order"=> $order];
-            } else {
-                DB::rollback();
-                throw new TransactionServiceException('Something went wrong, try again later');
-            }
+            DB::commit();
+            // trigger Order event
+            event( new OrderCreated($order));
             
-
+            return ["order"=> $order];       
+            
         } catch(\Throwable $e){
+            DB::rollback();
             handleThrowable($e);
         }
         
@@ -117,25 +113,20 @@ class TransactionService extends BaseService implements TransactionServiceInterf
             $order->fee = $request['fee']  ?? 0;
             $order->remark = $request['remark'] ?? NULL;
 
-            if ($order->save()) {
-                DB::commit();
-                // trigger Transaction event
-                event( new TransactionCreated($order));
-                
-                return ["order"=> $order];
-            } else {
-                DB::rollback();
-                throw new TransactionServiceException('Something went wrong, try again later');
-            }
+            DB::commit();
+            // trigger Order event
+            event( new OrderCreated($order));
             
-
+            return ["order"=> $order];
+          
         } catch(\Throwable $e){
+            DB::rollback();
             handleThrowable($e);
         }
         
     }
 
-    public function find_order($order_id = null){
+    public function findOrder($order_id = null){
         $user = Auth::user();
 
         $order = Order::where('id', $order_id)->where('user_id', $user->id)->first();
