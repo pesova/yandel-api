@@ -4,7 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 
-class TransactionServiceException extends Exception
+class PaymentServiceException extends Exception
 {
     protected $error, $code;
 

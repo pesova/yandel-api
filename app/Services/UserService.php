@@ -11,10 +11,10 @@ use App\Contracts\UserServiceInterface;
 
 
 class UserService extends BaseService implements UserServiceInterface{
-
-
     private $user, $logChannel = 'auth';
 
+    const USER_NOT_FOUND = "User not found";
+    
     public function __construct( 
         User $user
     )
@@ -22,63 +22,75 @@ class UserService extends BaseService implements UserServiceInterface{
         $this->model = $user;
     }
 
+    /**
+     * Returns a selected user
+     *
+     * @param int|string $user
+     */
+    public function find($user = null, bool $chainable = false): User
+    {
+        if(is_numeric($user)) $user = (int) $user;
+
+        if(is_int($user) || is_string($user)){
+            $user = $this->model
+                    ->when(is_int($user), function($query) use ($user){
+                        $query->where('id', $user);
+                    })
+                    ->when(!is_int($user) && is_string($user), function($query) use ($user){
+                        $query->whereColumns(['username', 'email', 'phone'], $user);
+                    })
+                    ->firstOrFail();
+        }
+
+        if(!$user instanceof User) throw new UserServiceException(self::USER_NOT_FOUND);
+
+        return $user;
+    }
+
     public function updateUser( array $request){
         $user = $this->find(Auth::user()->id)->firstOrFail();
 
+        DB::beginTransaction();
         try {
-
-            if (empty($request['name']) && empty($request['email']) && empty($request['phone']) && empty($request['bvn'])) {
-                throw new UserServiceException('No Parameter specified');
-            }
-            if ($user && $user->update($request)) {
-                // trigger user updated event
-                event( new UserUpdated($user) );
-    
-                return ["user"=> $user];
-            }
-        } catch (\Throwable $e) {
-            handleThrowable($e);
-        }
+            if (empty($request)) throw new UserServiceException('No Parameter specified');
             
+            $user->update($request);
+            
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollback();
+            handleThrowable($e);
 
+            throw $e;
+        }
+
+        // trigger user updated event
+        event( new UserUpdated($user) );
+        return $user;
     }
     
     public function updateProfilePicture( array $request ){
         $user = $this->find(Auth::user()->id)->firstOrFail();
 
-        if ($user) {
-            DB::beginTransaction();
-            try {
-                
-                if ($request['avatar_url'] !== null) {
+        DB::beginTransaction();
+        try {
+            
+            if ( empty($request['avatar']) ) throw new UserServiceException('Image file Not found');
 
-                    $image = $request['avatar_url'];
-                    $fileNameToStore = saveImage($image, 'profile_pics');        
-    
-                    $user->avatar_url = $fileNameToStore;
+            $image = $request['avatar'];
+            $fileNameToStore = saveImage($image, encrypt($user->email), 'profile_pics');        
+            $user->avatar_url = $fileNameToStore;
 
-                    if ($user->save()) {
-                        
-                        DB::commit();
-                        
-                        return ["user"=> $user];
-                    } else {
-                        DB::rollback();
-                        throw new UserServiceException('Something went wrong, try again later');
-                    }
+            $user->save();
 
-                }else {
-                    throw new UserServiceException('Image file Not found');
-
-                }
-
-            } catch(\Throwable $e){
-                DB::rollback();
-                \Log::channel($this->logChannel)->error($e->getMessage());
-                throw $e;
-            }
+            DB::commit();
+        } catch(\Throwable $e){
+            DB::rollback();
+            handleThrowable($e, $this->logChannel);
+            throw $e;
         }
-
+        
+        return $user;
     }
     
     public function getUserInfo( $user_id = null ){
@@ -87,12 +99,9 @@ class UserService extends BaseService implements UserServiceInterface{
             "user $user_id must be  numeric or integer. ".gettype($user_id).' given.'
         );
 
-        $user = $this->find($user_id)->first();
-        if (!$user)
-            throw new UserServiceException('User Not FOund');
-        return $user;
+        $user = $this->find($user_id)->firstOrFail();
 
-        
+        return $user;
     }
 
 }

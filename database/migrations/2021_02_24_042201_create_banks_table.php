@@ -17,7 +17,7 @@ class CreateBanksTable extends Migration
             $table->id();
             $table->string('name')->unique('name');
             $table->string('logo_url')->nullable();
-            $table->char('cbn_code', 3)->nullable()->index('cbn_code');
+            $table->char('cbn_code', 6)->nullable()->index('cbn_code');
             $table->char('nip_code', 6)->nullable()->index('nipcode');
             $table->string('ussd')->nullable();
 

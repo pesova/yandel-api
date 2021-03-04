@@ -45,6 +45,23 @@ class CustomProvider extends ServiceProvider
          // Binding Order Interface to Order Service
          $this->app->bind('App\Contracts\OrderServiceInterface', 'App\Services\OrderService');
 
+        $this->app->bind('payment-gateway', 'App\Services\Payment\PaymentGatewayManager');
+
+        $this->app->bind('App\Contracts\PaymentDriverInterface', 'App\Services\Payment\PaymentGatewayManager');
+        
+        $this->app->bind('App\Contracts\PaymentGatewayInterface', 'App\Services\Payment\PaymentGatewayManager');
+
+        $this->app->bind('App\Contracts\CardServiceInterface', 'App\Services\CardService');
+        
+        $this->app->bind('App\Contracts\BankServiceInterface', 'App\Services\BankService');
+
+        $this->app->bind('App\Contracts\WalletServiceInterface', 'App\Services\WalletService');
+
+        $this->app->bind('App\Contracts\TransactionServiceInterface', 'App\Services\TransactionService');
+
+        $this->app->bind('App\Contracts\WithdrawalServiceInterface', 'App\Services\WithdrawalService');
+        
+        $this->app->bind('App\Contracts\DepositServiceInterface', 'App\Services\DepositService');
     }
 
     /**
@@ -113,5 +130,18 @@ class CustomProvider extends ServiceProvider
                 );
             });
         }
+
+        /**
+         * Morph relationship mapping
+         */
+        Relation::morphMap([
+            'user' => 'App\Models\User',
+            'card' => 'App\Models\Card',
+            'bank' => 'App\Models\BankUser',
+            'order' => 'App\Models\Order',
+            'coupon' => 'App\Models\Coupon',
+            'wallet' => 'App\Models\WalletUser',
+        ]);
+
     }
 }

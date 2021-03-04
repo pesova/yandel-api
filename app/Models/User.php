@@ -52,6 +52,51 @@ class User extends Authenticatable
     
     /**
      * Direct relationship
+     * - A user can have many bank accounts
+     */
+    public function bankAccounts()
+    {
+        return $this->hasMany(BankUser::class)->with('bank');
+    }
+
+    /**
+     * Direct relationship
+     * - A user can have many bank accounts
+     */
+    public function banks()
+    {
+        return $this->hasMany(BankUser::class)->with('bank');
+    }
+    
+    /**
+     * Direct relationship
+     * - A user can have many cards
+     */
+    public function cards()
+    {
+        return $this->hasMany(Card::class);
+    }
+
+    /**
+     * Direct relationship
+     * - A user can have many wallets
+     */
+    public function userWallets()
+    {
+        return $this->hasMany(WalletUser::class);
+    }
+
+    /**
+     * Direct relationship
+     * - A user can have many transactions
+     */
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
+    /**
+     * Direct relationship
      * - A user can have many notifications
      */
     public function notifications()

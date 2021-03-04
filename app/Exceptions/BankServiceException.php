@@ -4,7 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 
-class TransactionServiceException extends Exception
+class BankServiceException extends Exception
 {
     protected $error, $code;
 
@@ -12,9 +12,9 @@ class TransactionServiceException extends Exception
     * Exception constructor.
     * @param $error
     */
-    public function __construct($error, $code = 400)
+    public function __construct($error = null, $code = 400)
     {
-        $this->error = $error;
+        $this->error = $error ?? 'Something went wrong. Please retry.';
         $this->code = $code;
     }
 
@@ -29,7 +29,7 @@ class TransactionServiceException extends Exception
          * Log error message
          * Endpoint called, status code, response
          */
-        \Log::channel('app')->error($this->error);
+        \Log::channel('bank')->error($this->error);
         
         return false;
     }

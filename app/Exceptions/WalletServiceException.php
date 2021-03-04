@@ -4,7 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 
-class TransactionServiceException extends Exception
+class WalletServiceException extends Exception
 {
     protected $error, $code;
 
@@ -29,7 +29,7 @@ class TransactionServiceException extends Exception
          * Log error message
          * Endpoint called, status code, response
          */
-        \Log::channel('app')->error($this->error);
+        \Log::channel('wallet')->error($this->error);
         
         return false;
     }

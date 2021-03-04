@@ -4,8 +4,9 @@ namespace App\Exceptions;
 
 use Exception;
 
-class TransactionServiceException extends Exception
+class PaymentGatewayException extends Exception
 {
+    
     protected $error, $code;
 
     /**
@@ -16,6 +17,8 @@ class TransactionServiceException extends Exception
     {
         $this->error = $error;
         $this->code = $code;
+        
+        parent::__construct($this->error, $this->code);
     }
 
     /**
@@ -27,13 +30,16 @@ class TransactionServiceException extends Exception
     {
         /**
          * Log error message
+         * 
+         * TODO: Error should be an array, having 
          * Endpoint called, status code, response
          */
-        \Log::channel('app')->error($this->error);
-        
+        \Log::channel('cba')->error( $this->error );
+
         return false;
     }
 
+    
     /**
      * Render the exception into an HTTP response.
      *
@@ -45,6 +51,17 @@ class TransactionServiceException extends Exception
      */
     public function render($request)
     {
-        return error($this->error, $this->code);
+        $error = $this->error->json();
+        $errorCode = $error ? $error['status'] ?? $this->error->status() : null;
+        
+        if(isset($error) && isset($error['message']) ){
+            $message = $error['message'];
+        }elseif($this->error->status() === 404){
+            $message = "You may have called an invalid resource";
+        }else{
+            $message = 'Call to CbaService failed';
+        }
+
+        return error(($message), $this->error->status(), (int) $errorCode);
     }
 }
