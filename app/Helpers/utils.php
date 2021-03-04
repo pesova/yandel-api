@@ -59,7 +59,7 @@ if(!function_exists('saveImage'))
  */
 if (!function_exists('saveAndCompressImage'))
 {
-    function saveImage($imageFile, $filePath = 'company_logos')
+    function saveAndCompressImage($imageFile, $filePath = 'company_logos')
     {
         $fileName = time() . '.' . $imageFile->getClientOriginalExtension();
         Image::make($imageFile)->resize(300, 300)
