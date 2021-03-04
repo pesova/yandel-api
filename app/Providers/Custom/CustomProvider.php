@@ -39,6 +39,12 @@ class CustomProvider extends ServiceProvider
         // Binding Setting Interface to Setting Service
         $this->app->bind('App\Contracts\SettingServiceInterface', 'App\Services\SettingService');
 
+         // Binding Coupon Interface to Coupon Service
+         $this->app->bind('App\Contracts\CouponServiceInterface', 'App\Services\CouponService');
+
+         // Binding Order Interface to Order Service
+         $this->app->bind('App\Contracts\OrderServiceInterface', 'App\Services\OrderService');
+
         $this->app->bind('payment-gateway', 'App\Services\Payment\PaymentGatewayManager');
 
         $this->app->bind('App\Contracts\PaymentDriverInterface', 'App\Services\Payment\PaymentGatewayManager');

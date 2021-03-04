@@ -105,6 +105,15 @@ class User extends Authenticatable
     }
 
     /**
+     * Direct relationship
+     * - A user can have many orders
+     */
+    public function orders()
+    {
+        return $this->hasMany('App\Models\Order');
+    }
+
+    /**
      * Get the user's bvn.
      *
      * @param  int  $value

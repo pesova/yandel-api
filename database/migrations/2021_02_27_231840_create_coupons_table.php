@@ -19,8 +19,8 @@ class CreateCouponsTable extends Migration
             $table->string('slug')->index()->unique();
             $table->string('code')->nullable();
             $table->text('image_url')->nullable();
-            $table->json('currencies')->nullable();
-            $table->json('types')->nullable();
+            $table->longText('currencies')->nullable();
+            $table->longText('types')->nullable();
             $table->decimal('buy_rate', 19,4)->default(1);
             $table->decimal('sell_rate', 19,4)->default(1);
             $table->decimal('buy_margin', 19,4)->default(0);

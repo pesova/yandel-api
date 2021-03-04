@@ -93,10 +93,10 @@ Route::group(['prefix' => 'v1'], function () {
     |--------------------------------------------------------------------------
     */
     Route::group(['prefix'=>'orders', 'middleware'=>'auth:api'], function(){
-        Route::get('/', 'TransactionController@list');
-        Route::post('/buy', 'TransactionController@buy');
-        Route::post('/sell', 'TransactionController@sell');
-        Route::get('/{order_id}', 'TransactionController@find');
+        Route::get('/', 'OrderController@listOrders');
+        Route::post('/buy', 'OrderController@buy');
+        Route::post('/sell', 'OrderController@sell');
+        Route::get('/{order_id}', 'OrderController@findOrder');
     });
 
     /*
@@ -127,6 +127,7 @@ Route::group(['prefix' => 'v1'], function () {
 
     Route::get('/legal', 'SettingController@getLegal');
 
+    Route::get('/coupons', 'CouponController@getCoupons');
 
     /*
     |--------------------------------------------------------------------------
