@@ -78,7 +78,7 @@ class OrderService extends BaseService implements OrderServiceInterface{
             
         } catch(\Throwable $e){
             DB::rollback();
-            handleThrowable($e);
+            handleThrowable($e,'order', 'Buy Order');
         }
         
     }
@@ -121,7 +121,7 @@ class OrderService extends BaseService implements OrderServiceInterface{
           
         } catch(\Throwable $e){
             DB::rollback();
-            handleThrowable($e);
+            handleThrowable($e,'order', 'sell Order');
         }
         
     }
@@ -131,8 +131,6 @@ class OrderService extends BaseService implements OrderServiceInterface{
 
         $order = Order::where('id', $order_id)->where('user_id', $user->id)->first();
             
-        // trigger contact support event
-
         return $order;
         
     }

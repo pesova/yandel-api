@@ -127,6 +127,7 @@ Route::group(['prefix' => 'v1'], function () {
 
     Route::get('/legal', 'SettingController@getLegal');
 
+    Route::get('/coupons', 'CouponController@getCoupons');
 
     /*
     |--------------------------------------------------------------------------
