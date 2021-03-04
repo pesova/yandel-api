@@ -19,10 +19,12 @@ class OrderService extends BaseService implements OrderServiceInterface{
     private $order;
 
     public function __construct( 
-        Order $order
+        Order $order,
+        Coupon $coupon
     )
     {
         $this->model = $order;
+        $this->coupon = $coupon;
     }
 
     public function listOrders(array $params = null){
@@ -44,10 +46,10 @@ class OrderService extends BaseService implements OrderServiceInterface{
     public function buy(array $request){
         $user = Auth::user();
             
-        DB::beginOrder();
+        DB::beginTransaction();
         try {
             $order = new $this->model;
-            $coupon = Coupon::where('id', $request['order_id'])->first();
+            $coupon = $this->coupon::where('id', $request['order_id'])->first();
 
             $volume = $request['volume'];
             $buy_rate = $coupon->buy_rate;
@@ -90,7 +92,7 @@ class OrderService extends BaseService implements OrderServiceInterface{
         DB::beginTransaction();
         try {
             $order = new $this->model;
-            $coupon = Coupon::where('id', $request['order_id'])->first();
+            $coupon = $this->coupon::where('id', $request['order_id'])->first();
 
             $volume = $request['volume'];
             $sell_rate = $coupon->sell_rate;
@@ -131,7 +133,7 @@ class OrderService extends BaseService implements OrderServiceInterface{
     public function findOrder($order_id = null){
         $user = Auth::user();
 
-        $order = $this->model::where('order_id', $order_id)->where('user_id', $user->id)->first();
+        $order = $this->model::where('id', $order_id)->where('user_id', $user->id)->first();
         return $order;        
     }
 
