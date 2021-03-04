@@ -31,6 +31,25 @@ if(!function_exists('format_money'))
   }
 }
 
+if(!function_exists('saveImage'))
+{
+  function  saveImage($image, $name = null, $location = '')
+  {
+    if( ! is_string($image) ) $image = base64_encode( file_get_contents($image) );
+    if( !str_ends_with($location, '/') ) $location.='/';
+
+    $imageName = ($name ?? auth()->user()->username).'.png';
+    $filePath = $location.$imageName;
+
+    $image = str_replace('data:image/png;base64,', '', $image);
+    $image = str_replace(' ', '+', $image);
+    $image = base64_decode($image);
+    Storage::disk('public')->put($filePath, $image);
+
+    return $imageName;
+  }
+}
+
 /**
  * resize an image and save it
  *
@@ -38,7 +57,7 @@ if(!function_exists('format_money'))
  * @return string
  * @throws \Intervention\Image\Exception\NotWritableException
  */
-if (!function_exists('saveImage'))
+if (!function_exists('saveAndCompressImage'))
 {
     function saveImage($imageFile, $filePath = 'company_logos')
     {

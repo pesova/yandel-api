@@ -47,11 +47,11 @@ abstract class BaseService
 
     /**
      * Fetch a list of existing models 
-     * @param bool $chainable = true
+     * @param bool $chainable = false
      * 
      * @return Model[];
      */
-    public function all(bool $chainable = true)
+    public function all(bool $chainable = false)
     {
         $this->model = $this->model->all();
 
@@ -60,11 +60,11 @@ abstract class BaseService
 
     /**
      * Fetch a list of existing models 
-     * @param bool $chainable = true
+     * @param bool $chainable = false
      * 
      * @return Model[];
      */
-    public function list(bool $chainable = true)
+    public function list(bool $chainable = false)
     {
         $this->model = $this->model->all();
 
@@ -75,11 +75,11 @@ abstract class BaseService
      * Creates a new model
      * 
      * @param array  $payload
-     * @param bool $chainable = true
+     * @param bool $chainable = false
      * 
      * @return Model
      */
-    public function create(array $payload, bool $chainable = true)
+    public function create(array $payload, bool $chainable = false)
     {
         $this->model = $this->model->create( $payload );
 
@@ -91,11 +91,11 @@ abstract class BaseService
      * 
      * @param int $id
      * @param array $payload
-     * @param bool $chainable = true
+     * @param bool $chainable = false
      * 
      * @return Model
      */
-    public function edit(int $id, array $payload, bool $chainable = true)
+    public function edit(int $id, array $payload, bool $chainable = false)
     {
         $this->model = $this->model->where([$this->identifier => $id])->firstOrFail();
         $this->model->update($payload);
@@ -108,11 +108,11 @@ abstract class BaseService
      * Only if a model is editable
      * 
      * @param int $id
-     * @param bool $chainable = true
+     * @param bool $chainable = false
      * 
      * @return Model
      */
-    public function delete(int $id, bool $chainable = true)
+    public function delete(int $id, bool $chainable = false)
     {
         $this->model = $this->model->where($this->identifier, $id)->firstOrFail();
         $this->model->delete();
@@ -124,15 +124,15 @@ abstract class BaseService
      * Find a model by id
      * 
      * @param int $id
-     * @param bool $chainable = true
+     * @param bool $chainable = false
      * 
      * @return Model
      */
-    public function find( int $id, bool $chainable = true)
+    public function find( int $id, bool $chainable = false)
     {
         $this->model = $this->model->where($this->identifier, $id);
 
-        return $chainable ? $this->model : $this->model->first();
+        return $chainable ? $this->model : $this->model->firstOrFail();
     }
 
     /**
@@ -140,11 +140,11 @@ abstract class BaseService
      * 
      * @param string $columnName
      * @param mixed $value
-     * @param bool $chainable = true
+     * @param bool $chainable = false
      * 
      * @return Model
      */
-    public function findByColumn( string $columnName, $value, bool $chainable = true)
+    public function findByColumn( string $columnName, $value, bool $chainable = false)
     {
         $this->model = $this->model->where($columnName, $value);
 
@@ -156,11 +156,11 @@ abstract class BaseService
      * 
      * @param array $columnNames
      * @param mixed $value
-     * @param bool $chainable = true
+     * @param bool $chainable = false
      * 
      * @return Model
      */
-    public function findByColumns( array $columnNames, $value, bool $chainable = true)
+    public function findByColumns( array $columnNames, $value, bool $chainable = false)
     {
         $this->model = $this->model->whereColumns($columnNames, $value);
 
@@ -172,11 +172,11 @@ abstract class BaseService
      * 
      * @param string $column = null
      * @param string $direction = null
-     * @param bool $chainable = true
+     * @param bool $chainable = false
      * 
      * @return Model
      */
-    public function orderBy(string $column = null, string $direction = null, bool $chainable = true)
+    public function orderBy(string $column = null, string $direction = null, bool $chainable = false)
     {
         $this->model = $this->model->orderBy( 
             $direction ?? $this->orderBy,

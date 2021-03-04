@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use DB;
 use Illuminate\Http\Request;
 use App\Contracts\AuthServiceInterface as AuthService;
+use App\Contracts\UserServiceInterface as UserService;
 use App\Contracts\TokenServiceInterface as TokenService;
+use App\Contracts\WalletServiceInterface as WalletService;
 
 class AuthController extends Controller
 {
@@ -14,18 +16,22 @@ class AuthController extends Controller
      * @var AuthService
      * @var TokenService
      */
-    private $authService, $tokenService;
+    private $authService, $userService, $tokenService, $walletService;
 
     /**
      * Inject Dependencies
      */
     public function __construct(
         AuthService $authService,
-        TokenService $tokenService
+        UserService $userService,
+        TokenService $tokenService,
+        WalletService $walletService
     )
     {
         $this->authService = $authService;
+        $this->userService = $userService;
         $this->tokenService = $tokenService;
+        $this->walletService = $walletService;
     }
 
     /**
@@ -103,9 +109,11 @@ class AuthController extends Controller
                 $request['otp'] ?? null
             );
 
-            $req = $this->authService->register( $request->all() );
+            $req = $this->authService->register( $request->only(['email', 'phone', 'password', 'otp']) );
 
-            // TODO: automatically create wallets for the user here
+            // setup user wallets
+            $user = $this->userService->find($req['user']);
+            $this->walletService->initializeWallets( $user );
 
             DB::commit();
         }
