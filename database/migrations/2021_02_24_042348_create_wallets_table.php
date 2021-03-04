@@ -17,12 +17,14 @@ class CreateWalletsTable extends Migration
             $table->id();
             $table->string('name')->index();
             $table->string('slug')->index();
-            $table->string('asset_code')->constrained();
-            $table->text('image_url')->constrained();
-            $table->decimal('buy_rate', 19,4)->default(0);
-            $table->decimal('sell_rate', 19,4)->default(0);
+            $table->string('code')->nullable();
+            $table->text('image_url')->nullable();
+            $table->decimal('buy', 19,4)->default(0);
+            $table->decimal('sell', 19,4)->default(0);
             $table->decimal('buy_margin', 19,4)->default(0);
             $table->decimal('sell_margin', 19,4)->default(0);
+            $table->decimal('deposit_fee', 19,4)->default(0);
+            $table->decimal('withdrawal_fee', 19,4)->default(0);
             $table->boolean('is_available')->default(true);
             $table->boolean('is_visible')->default(true);
 

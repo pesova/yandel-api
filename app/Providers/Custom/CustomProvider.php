@@ -23,6 +23,7 @@ class CustomProvider extends ServiceProvider
          * Also helps to force developers to follow the
          * coding-to-interface standard.
          */
+        
         // Binding Auth Interface to Auth Service
         $this->app->bind('App\Contracts\AuthServiceInterface', 'App\Services\AuthService');
 
@@ -31,14 +32,22 @@ class CustomProvider extends ServiceProvider
 
         // Binding Token Interface to Token Service
         $this->app->bind('App\Contracts\TokenServiceInterface', 'App\Services\TokenService');
-
-
         
         // Binding User Interface to User Service
         $this->app->bind('App\Contracts\UserServiceInterface', 'App\Services\UserService');
 
         // Binding Setting Interface to Setting Service
         $this->app->bind('App\Contracts\SettingServiceInterface', 'App\Services\SettingService');
+
+        $this->app->bind('payment-gateway', 'App\Services\Payment\PaymentGatewayManager');
+
+        $this->app->bind('App\Contracts\PaymentDriverInterface', 'App\Services\Payment\PaymentGatewayManager');
+        
+        $this->app->bind('App\Contracts\PaymentGatewayInterface', 'App\Services\Payment\PaymentGatewayManager');
+
+        $this->app->bind('App\Contracts\CardServiceInterface', 'App\Services\CardService');
+        
+        $this->app->bind('App\Contracts\BankServiceInterface', 'App\Services\BankService');
 
     }
 
