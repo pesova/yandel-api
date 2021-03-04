@@ -58,7 +58,7 @@ class UserService extends BaseService implements UserServiceInterface{
             
             DB::commit();
         } catch (\Throwable $e) {
-            DB::rollbacl();
+            DB::rollback();
             handleThrowable($e);
 
             throw $e;
