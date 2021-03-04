@@ -21,7 +21,7 @@ class CreateTransactionsTable extends Migration
             $table->enum('type', ['deposit', 'withdrawal']);
             $table->enum('source_type', ['wallet', 'crypto', 'card'])->nullable();
             $table->unsignedBigInteger('source_id')->nullable();
-            $table->enum('destination_type', ['wallet', 'crypto'])->nullable();
+            $table->enum('destination_type', ['wallet', 'bank', 'crypto'])->nullable();
             $table->unsignedBigInteger('destination_id')->nullable();
 
             $table->decimal('amount', 19,4)->default(0)->comment('Amount of money that was credited or debited');

@@ -25,7 +25,7 @@ class UserController extends Controller
     public function updateUser(Request $request)
     {
         $req = $this->userService->updateUser(
-            $request->all(),
+            $request->only(['email', 'phone', 'bvn']),
         );
 
         return success( $req['message'] ?? 'User Updated Successfully', $req['data'] ?? $req );
