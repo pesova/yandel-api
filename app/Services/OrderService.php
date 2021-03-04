@@ -26,17 +26,18 @@ class OrderService extends BaseService implements OrderServiceInterface{
     }
 
     public function listOrders(array $params = null){
-        $user = Auth::user();
+        $user = Auth::user()->orders()
+                        ->when(isset($params['order_type']), function($query) use ($params){
+                            // dd($params);
+                            $query->whereOrderType($params);
+                        })
+                        ->when(isset($params['status']), function($query) use ($params){
+                            // dd($params);
+                            $query->whereStatus($params);
+                        })
+                        ->get();
 
-        if (isset($params['order_type'])) {
-            return $user->orders->where('order_type', $params['order_type']);
-        }
-
-        if (isset($params['status'])) {
-            return $user->orders->where('status', $params['status']);
-        }
-
-        return $user->orders;
+        return $user;
 
     }
 
