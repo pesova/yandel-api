@@ -20,8 +20,7 @@ class CouponService extends BaseService implements CouponServiceInterface{
     }
 
     public function getCoupons(){
-        $coupon = Coupon::where('is_available', true)->where('is_visible', true)->get();
-
+        $coupon = $this->model->where('is_available', true)->where('is_visible', true)->get();
         return $coupon;
     }
 

@@ -44,11 +44,8 @@ class OrderController extends Controller
         
         $req = $this->orderService->buy(
             $request->all(),
-        );
-
-        $message = 'Order Sent';
-        
-        return success( $req['messages'] ?? $message, $req['data'] ?? $req );
+        );        
+        return success( $req['messages'] ?? 'Order Sent', $req['data'] ?? $req );
         
     }
 
@@ -68,11 +65,8 @@ class OrderController extends Controller
         
         $req = $this->orderService->sell(
             $request->all(),
-        );
-
-        $message = 'Order Sent';
-        
-        return success( $req['messages'] ?? $message, $req['data'] ?? $req );
+        );        
+        return success( $req['messages'] ?? 'Order Sent', $req['data'] ?? $req );
         
     }
 

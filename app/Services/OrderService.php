@@ -26,18 +26,18 @@ class OrderService extends BaseService implements OrderServiceInterface{
     }
 
     public function listOrders(array $params = null){
-        $user = Auth::user()->orders()
+        $user = Auth::user();
+        
+             $orders = $user->orders()
                         ->when(isset($params['order_type']), function($query) use ($params){
-                            // dd($params);
                             $query->whereOrderType($params);
                         })
                         ->when(isset($params['status']), function($query) use ($params){
-                            // dd($params);
                             $query->whereStatus($params);
                         })
                         ->get();
 
-        return $user;
+        return $orders;
 
     }
 
@@ -46,7 +46,7 @@ class OrderService extends BaseService implements OrderServiceInterface{
             
         DB::beginOrder();
         try {
-            $order = new Order();
+            $order = new $this->model;
             $coupon = Coupon::where('id', $request['order_id'])->first();
 
             $volume = $request['volume'];
@@ -70,7 +70,7 @@ class OrderService extends BaseService implements OrderServiceInterface{
             $order->unit_price = $request['unit_price'] ?? 0;
             $order->fee = $request['fee']  ?? 0;
             $order->remark = $request['remark'] ?? NULL;
-
+            $order->save();
             DB::commit();
             // trigger Order event
             event( new OrderCreated($order));
@@ -89,7 +89,7 @@ class OrderService extends BaseService implements OrderServiceInterface{
             
         DB::beginTransaction();
         try {
-            $order = new Order();
+            $order = new $this->model;
             $coupon = Coupon::where('id', $request['order_id'])->first();
 
             $volume = $request['volume'];
@@ -114,6 +114,7 @@ class OrderService extends BaseService implements OrderServiceInterface{
             $order->fee = $request['fee']  ?? 0;
             $order->remark = $request['remark'] ?? NULL;
 
+            $order->save();
             DB::commit();
             // trigger Order event
             event( new OrderCreated($order));
@@ -130,10 +131,8 @@ class OrderService extends BaseService implements OrderServiceInterface{
     public function findOrder($order_id = null){
         $user = Auth::user();
 
-        $order = Order::where('id', $order_id)->where('user_id', $user->id)->first();
-            
-        return $order;
-        
+        $order = $this->model::where('order_id', $order_id)->where('user_id', $user->id)->first();
+        return $order;        
     }
 
 
