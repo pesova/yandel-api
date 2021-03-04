@@ -25,11 +25,18 @@ class TransactionService extends BaseService implements TransactionServiceInterf
         $this->model = $order;
     }
 
-    public function list_orders(array $request){
+    public function list_orders(array $params = null){
         $user = Auth::user();
 
-        return $user->orders;
+        if (isset($params['order_type'])) {
+            return $user->orders->where('order_type', $params['order_type']);
+        }
 
+        if (isset($params['status'])) {
+            return $user->orders->where('status', $params['status']);
+        }
+
+        return $user->orders;
     }
 
     public function buy(array $request){

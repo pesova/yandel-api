@@ -22,8 +22,8 @@ class TransactionController extends Controller
         $this->orderService = $orderService;
     }
 
-    public function list_orders(){
-        $req = $this->orderService->list_orders();
+    public function list_orders(Request $request){
+        $req = $this->orderService->list_orders($request->all());
 
         return success( 'success', $req );
     }
