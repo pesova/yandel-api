@@ -30,7 +30,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token', 'bvn',
+        'password', 'remember_token',
     ];
 
     /**
@@ -121,6 +121,7 @@ class User extends Authenticatable
      */
     public function getBvnAttribute($value)
     {
+        if(empty($value)) return $value;
         $mask_number =  str_repeat("*", strlen($value)-4) . substr($value, -4);
         
         return $mask_number ?? 'NULL';

@@ -79,7 +79,7 @@ class WalletService extends BaseService implements WalletServiceInterface
         $user = $user ?? Auth::user();
 
         return $user->userWallets()->join('wallets', 'wallets.id', 'wallet_users.wallet_id')
-                    ->where('wallets.is_public', true)
+                    ->where('wallets.is_available', true)
                     ->with('currency:id,name,code,symbol,unicode')
                     ->select('wallets.*', 'wallet_users.*')
                     ->get();
@@ -144,6 +144,7 @@ class WalletService extends BaseService implements WalletServiceInterface
         $response = [
             'amount' => $amount, 
             'fees' => 0,
+            'balance' => 0,
             'status' => 'pending',
             'gateway_response' => ''
         ];
@@ -157,6 +158,7 @@ class WalletService extends BaseService implements WalletServiceInterface
             $wallet->save();
 
             $response['status'] = 'success';
+            $response['balance'] = $wallet->available_balance;
             $response['gateway_response'] = 'successful';
 
             DB::commit();
@@ -166,7 +168,7 @@ class WalletService extends BaseService implements WalletServiceInterface
             throw $e;
         }
         
-        if($wallet->wallet->is_public) event( new WalletCredited($wallet, $amount) );
+        if($wallet->wallet->is_visible) event( new WalletCredited($wallet, $amount) );
 
         return array_merge($response, $wallet->toArray() );
     }
@@ -185,6 +187,7 @@ class WalletService extends BaseService implements WalletServiceInterface
         $response = [
             'amount' => $amount, 
             'fees' => 0,
+            'balance' => 0,
             'status' => 'pending',
             'gateway_response' => ''
         ];
@@ -198,6 +201,7 @@ class WalletService extends BaseService implements WalletServiceInterface
                 throw new WalletServiceException(self::INSUFFICIENT_BALANCE);
 
             $wallet->available_balance -= $amount;
+            $wallet->book_balance -= $amount;
             $wallet->save();
             
             // TODO: deterine when and where below action should take place
@@ -205,6 +209,7 @@ class WalletService extends BaseService implements WalletServiceInterface
             // Note: not all wallet credits / debits should be pushed to mifos
 
             $response['status'] = 'success';
+            $response['balance'] = $wallet->available_balance;
             $response['gateway_response'] = 'successful';
 
             DB::commit();
@@ -214,7 +219,7 @@ class WalletService extends BaseService implements WalletServiceInterface
             throw $e;
         }
 
-        if($wallet->wallet->is_public) event( new WalletDebited($wallet, $amount) );
+        if($wallet->wallet->is_visible) event( new WalletDebited($wallet, $amount) );
 
         return array_merge($response, $wallet->toArray() );
     }

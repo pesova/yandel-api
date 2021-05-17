@@ -9,12 +9,20 @@ class Order extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['order_type', 'currency', 'coupon_type', 'volume', 'rate', 'unit_price', 'total_payable', 'fee', 'remark'];
+    protected $guarded = [];
+
+    protected $with = [
+        'currencyTypes:id,coupon_id,name,buy_rate,sell_rate'
+    ];
 
     public function user()
     {
         return $this->belongsTo('App\Models\User');
     }
 
+    public function currencyTypes()
+    {
+        return $this->belongsTo(CouponCurrencyType::class, 'coupon_currency_type_id');
+    }
 
 }
