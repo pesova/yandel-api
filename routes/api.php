@@ -45,8 +45,7 @@ Route::group(['prefix' => 'v1'], function () {
     |--------------------------------------------------------------------------
     */
     Route::group(['prefix'=>'user', 'middleware'=>'auth:api'], function(){
-        Route::get('/{id}', 'UserController@getUserInfo');
-        Route::get('/{id}', 'UserController@getUserInfo');
+        Route::get('/', 'UserController@getUserInfo');
         Route::put('/', 'UserController@updateUser');
         Route::post('/avatar', 'UserController@updateProfilePicture');
     });
@@ -64,7 +63,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('/{bank_id}', 'BankController@findBankAccount');
         Route::delete('/{bank_id}', 'BankController@deleteBankAccount');
     });
-
+    
     /*
     |--------------------------------------------------------------------------
     | CARD ROUTES
@@ -89,13 +88,21 @@ Route::group(['prefix' => 'v1'], function () {
 
     /*
     |--------------------------------------------------------------------------
+    | COUPON ROUTES
+    |--------------------------------------------------------------------------
+    */
+    Route::group(['prefix'=>'coupons', 'middleware'=>'auth:api'], function(){
+        Route::get('/', 'CouponController@listCoupons');
+        Route::post('/sell', 'CouponController@sellCoupon');
+    });
+
+    /*
+    |--------------------------------------------------------------------------
     | ORDER ROUTES
     |--------------------------------------------------------------------------
     */
     Route::group(['prefix'=>'orders', 'middleware'=>'auth:api'], function(){
         Route::get('/', 'OrderController@listOrders');
-        Route::post('/buy', 'OrderController@buy');
-        Route::post('/sell', 'OrderController@sell');
         Route::get('/{order_id}', 'OrderController@findOrder');
     });
 
@@ -126,23 +133,6 @@ Route::group(['prefix' => 'v1'], function () {
     });
 
     Route::get('/legal', 'SettingController@getLegal');
-
-    Route::get('/coupons', 'CouponController@getCoupons');
-
-    /*
-    |--------------------------------------------------------------------------
-    | BANK ROUTES
-    |--------------------------------------------------------------------------
-    */
-    Route::get('/list-banks', 'BankController@listBanks');
-    Route::get('/banks/enquiry', 'BankController@bankAccountEnquiry');
-    Route::group(['prefix'=>'/banks', 'middleware'=>'auth:api'], function(){
-        Route::post('/', 'BankController@addBankAccount');
-        Route::get('/', 'BankController@listBankAccounts');
-        Route::get('/{bank_id}', 'BankController@findBankAccount');
-        Route::delete('/{bank_id}', 'BankController@deleteBankAccount');
-    });
-
 });
 
 

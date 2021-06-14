@@ -15,24 +15,23 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->string('reference')->unique('reference')->nullable();
             $table->foreignId('user_id')->index()->constrained();
+            $table->string('reference')->unique('reference')->nullable();
             $table->enum('mode', ['buy', 'sell'])->index();
-            $table->enum('order_type', ['crypto', 'coupon']);
-            $table->unsignedBigInteger('order_id');
-            $table->string('currency')->nullable();
-            $table->string('coupon_type')->nullable();
-            $table->decimal('volume', 19, 4);
+            $table->enum('coupon_type', ['ecode', 'physical'])->nullable();
+            $table->unsignedBigInteger('coupon_id');
+            $table->string('coupon_currency_type_id');
+            $table->string('ecode')->nullable();
+            $table->string('coupon_front')->nullable();
+            $table->string('coupon_back')->nullable();
+            $table->decimal('units', 19, 4);
             $table->decimal('rate', 19, 4)->default(0);
-            $table->decimal('unit_price', 19, 4)->default(0);
             $table->decimal('total_payable', 19, 4);
             $table->decimal('fee', 19, 4)->default(0);
             $table->text('remark')->nullable();
-            $table->enum('status', ['pending', 'success', 'failed']);
+            $table->enum('status', ['pending', 'success', 'failed', 'cancelled']);
             $table->timestamps();
             $table->softDeletes();
-            
-            $table->index(['order_type', 'order_id']);
         });
     }
 

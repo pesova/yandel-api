@@ -5,6 +5,6 @@ namespace App\Contracts;
 
 interface CouponServiceInterface{
 
-    public function getCoupons();
+    public function listCoupons();
 
 }

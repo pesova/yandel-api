@@ -48,7 +48,7 @@ class UserService extends BaseService implements UserServiceInterface{
     }
 
     public function updateUser( array $request){
-        $user = $this->find(Auth::user()->id)->firstOrFail();
+        $user = $this->find(Auth::user()->id);
 
         DB::beginTransaction();
         try {
@@ -70,7 +70,7 @@ class UserService extends BaseService implements UserServiceInterface{
     }
     
     public function updateProfilePicture( array $request ){
-        $user = $this->find(Auth::user()->id)->firstOrFail();
+        $user = $this->find(Auth::user()->id);
 
         DB::beginTransaction();
         try {
@@ -99,7 +99,7 @@ class UserService extends BaseService implements UserServiceInterface{
             "user $user_id must be  numeric or integer. ".gettype($user_id).' given.'
         );
 
-        $user = $this->find($user_id)->firstOrFail();
+        $user = $this->find($user_id);
 
         return $user;
     }

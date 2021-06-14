@@ -39,8 +39,9 @@ class UserController extends Controller
         return success( $req['message'] ?? 'You successfully changed your profile pics', $req['data'] ?? $req );
     }
     
-    public function getUserInfo($user_id){
+    public function getUserInfo($user_id = null){
         try{
+            $user_id = $user_id ?? auth()->user()->id;
             $req = $this->userService->getUserInfo( $user_id );
             
         }
