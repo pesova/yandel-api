@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
         $this->call(WalletSeeder::class);
         // $this->call(BankSeeder::class);
 
-        if(in_array( app()->environment(), ['local', 'develop'] )) {
+        if(in_array( app()->environment(), ['local', 'development'] )) {
             $this->call(CouponSeeder::class);
             $this->call(CouponCurrencyTypeSeeder::class);
         }

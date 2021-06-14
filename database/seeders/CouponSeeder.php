@@ -13,43 +13,24 @@ class CouponSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\Coupon::updateOrCreate(
-            [
-                'name' => 'amazon',
-                'slug' => 'amazon'
-            ],
-            [
-                'code' => null,
-                'image_url' => null,
-                'is_available' => true,
-                'is_visible' => true,
-            ]
-        );
+        $availableCoupons = [
+            'amazon', 'apple', 'ebay', 'google',
+            'itunes', 'nike', 'steam', 'xbox'
+        ];
 
-        \App\Models\Coupon::updateOrCreate(
-            [
-                'name' => 'wallmart',
-                'slug' => 'wallmart'
-            ],
-            [
-                'code' => null,
-                'image_url' => null,
-                'is_available' => true,
-                'is_visible' => true,
-            ]
-        );
-
-        \App\Models\Coupon::updateOrCreate(
-            [
-                'name' => 'stripe',
-                'slug' => 'stripe'
-            ],
-            [
-                'code' => null,
-                'image_url' => null,
-                'is_available' => true,
-                'is_visible' => true,
-            ]
-        );
+        foreach($availableCoupons as $coupon){
+            \App\Models\Coupon::updateOrCreate(
+                [
+                    'name' => $coupon,
+                    'slug' => $coupon
+                ],
+                [
+                    'code' => $coupon,
+                    'image_url' => $coupon.'.jpeg',
+                    'is_available' => true,
+                    'is_visible' => true,
+                ]
+            );
+        }
     }
 }

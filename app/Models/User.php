@@ -126,4 +126,10 @@ class User extends Authenticatable
         
         return $mask_number ?? 'NULL';
     }
+    
+    public function getAvatarUrlAttribute($filename)
+    {
+        if(!$filename) return null;
+        return config('app.url')."/public/storage/profile_pics/$filename";
+    }
 }

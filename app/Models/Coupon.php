@@ -29,4 +29,11 @@ class Coupon extends Model
     {
         return $this->hasMany(CouponCurrencyType::class);
     }
+
+    
+    public function getImageUrlAttribute($filename)
+    {
+        if(!$filename) return null;
+        return config('app.url')."/public/storage/coupons/$filename";
+    }
 }
