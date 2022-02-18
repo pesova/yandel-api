@@ -16,12 +16,12 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(CurrencySeeder::class);
         $this->call(WalletSeeder::class);
-        // $this->call(BankSeeder::class);
+        $this->call(BankSeeder::class);
 
-        if(in_array( app()->environment(), ['local', 'development'] )) {
+        // if(in_array( app()->environment(), ['local', 'development'] )) {
             $this->call(CouponSeeder::class);
             $this->call(CouponCurrencyTypeSeeder::class);
-        }
+        // }
         
     }
 }
