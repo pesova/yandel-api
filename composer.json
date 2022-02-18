@@ -60,8 +60,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
-        "post-autoload-dump": [
-        ],
+        
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ],
