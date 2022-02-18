@@ -72,7 +72,6 @@ class DepositService extends BaseService implements DepositServiceInterface
         // NOTE: deposit source can either be wallet or card nothing else
         $source['type'] = strtolower( $from['type'] );
         $source['id'] = $from['id'] ?? null;
-
         if( ! in_array($source['type'], self::DEPOSIT_FROM_SOURCES) ) 
             throw new DepositServiceException('Invalid deposit source');
 
@@ -198,7 +197,7 @@ class DepositService extends BaseService implements DepositServiceInterface
 
     public function attemptDebit()
     {
-        $fees;
+        $fees = 0;
         $isSuccessful = false;
         $gatewayResponse = null;
         $sourceServiceName = $this->source['type']."Service";

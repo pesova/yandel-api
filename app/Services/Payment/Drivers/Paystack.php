@@ -73,6 +73,7 @@ class Paystack implements PaymentDriverInterface
             "metadata"=>json_encode($meta)
         ];
         $req = $this->http->post('transaction/charge_authorization', $payload);
+        // dd($req, $payload, $this->handleHttpRequest( $req ));
         return $this->tranformResponse ( $this->handleHttpRequest( $req ) );
     }
 
@@ -339,7 +340,7 @@ class Paystack implements PaymentDriverInterface
             "reference" => $reference,
             "channels" => ["card"],
             "metadata" => json_encode($meta),
-            "callback_url" => $this->config["CALLBACK_PAYMENT_URL"] ?? "https://payment/verify"
+            "callback_url" => $this->config["CALLBACK_PAYMENT_URL"] ?? "http://localhost:8002/api/v1/paystack/callback"
         ];
 
         $req = $this->http->post('transaction/initialize', $payload);

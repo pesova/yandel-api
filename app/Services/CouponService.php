@@ -49,9 +49,10 @@ class CouponService extends BaseService implements CouponServiceInterface{
 
         $reference = random_strings();
         
-        if( (float) $rate !== (float) $params['rate']){
-            throw new CouponServiceException("Rate has changed");
-        }
+        // if( (float) $rate !== (float) $params['rate']){
+        //     throw new CouponServiceException("Rate has changed");
+        // }
+        // dd($coupon, $couponCurrencyType, $rate, $margin);
 
         if($params['coupon_front']) {
             $couponFront = saveImage($params['coupon_front'], $user->id.'-'.$reference.'-front', 'coupons');

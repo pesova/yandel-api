@@ -83,7 +83,8 @@ Route::group(['prefix' => 'v1'], function () {
     */
     Route::group(['prefix'=>'wallets', 'middleware'=>'auth:api'], function(){
         Route::get('/', 'WalletController@listUserWallets');
-        Route::get('/{wallet_id}', 'WalletController@getWallet');
+        Route::get('/{wallet_id}', 'WalletController@findWallet');
+        Route::post('/deposit', 'WalletController@creditUserWallet');
     });
 
     /*
@@ -103,6 +104,8 @@ Route::group(['prefix' => 'v1'], function () {
     */
     Route::group(['prefix'=>'orders', 'middleware'=>'auth:api'], function(){
         Route::get('/', 'OrderController@listOrders');
+        Route::post('/buy', 'OrderController@buy');
+        Route::post('/sell', 'OrderController@sell');
         Route::get('/{order_id}', 'OrderController@findOrder');
     });
 
@@ -133,6 +136,7 @@ Route::group(['prefix' => 'v1'], function () {
     });
 
     Route::get('/legal', 'SettingController@getLegal');
+    Route::get('paystack/callback', 'TransactionController@handlePayment');
 });
 
 

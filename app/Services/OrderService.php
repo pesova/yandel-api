@@ -48,7 +48,7 @@ class OrderService extends BaseService implements OrderServiceInterface{
 
         $order = $this->model::when(is_numeric($order), function($query) use ($order){
                     $query->whereId($order);
-;                })
+                })
                 ->when( ! is_numeric($order) && is_string($order), function($query) use ($order){
                     $query->whereReference($order);
                 })

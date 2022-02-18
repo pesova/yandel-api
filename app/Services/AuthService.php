@@ -86,7 +86,7 @@ class AuthService extends BaseService implements AuthServiceInterface
      * 
      * @return array
      */
-    public function login($request):array
+    public function login($request)
     {
         // check if user has reached the max number of login attempts
         if (config('custom.app.THROTTLE_LOGIN') && $this->hasTooManyLoginAttempts($request)){
@@ -110,28 +110,34 @@ class AuthService extends BaseService implements AuthServiceInterface
         // authentication passed so reset failed login attemps
         $this->clearLoginAttempts($request);
 
-        $oauthRequest = Request::create('/oauth/token', 'POST', [
-            'grant_type' => 'password',
-            'client_id' => $request->client_id,
-            'client_secret' => $request->client_secret,
-            'username' => $request->identifier,
-            'password' => $request->password,
-            'scope' => '*',
-        ]);
+        // $oauthRequest = Request::create('/oauth/token', 'POST', [
+        //     'grant_type' => 'password',
+        //     'client_id' => $request->client_id,
+        //     'client_secret' => $request->client_secret,
+        //     'username' => $request->identifier,
+        //     'password' => $request->password,
+        //     'scope' => '*',
+        // ]);
+        
+        $token = Auth::user()->createToken('Password Grant Client');
         
         // since we are creating a mock request, set the origin of the mock request to match that of the original
         // request. the logic to determine whether this origin is allowed is handled by the CORS middleware
-        $oauthRequest->headers->add(['Origin' => $request->headers->get('Origin') ?? '']);
+        // $oauthRequest->headers->add(['Origin' => $request->headers->get('Origin') ?? '']);
 
-        $response = app()->handle($oauthRequest);
+        // $response = app()->handle($oauthRequest);
+        
 
         // trigger login success event
         event( new LoginSuccess(Auth::user(), $request->header('user-agent')) );
 
-        return array_merge(
-            ['statusCode'=>$response->getStatusCode()],
-            json_decode($response->getContent(), true)
-        );
+        return ["access_token"=>$token->accessToken, "expires_in"=>$token->token['expires_at']];
+        
+
+        // return array_merge(
+        //     ['statusCode'=>$response->getStatusCode()],
+        //     json_decode($response->getContent(), true)
+        // );
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use DB;
+use Auth;
 use Illuminate\Http\Request;
 use App\Contracts\UserServiceInterface as UserService;
 

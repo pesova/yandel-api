@@ -16,6 +16,8 @@ class Card extends Model
 
     protected $hidden = ['token', 'deleted_at'];
 
+    protected $table = 'cards';
+
     /**
      * Direct relationship
      * - A card can perform many deposits

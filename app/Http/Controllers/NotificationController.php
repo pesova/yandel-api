@@ -65,7 +65,7 @@ class NotificationController extends Controller
     /**
      * Deletes single or multiple notifications
      */
-    public function deleteNotifications( $notification = null, Request $request )
+    public function deleteNotifications( Request $request, $notification = null )
     {
         DB::beginTransaction();
         try{

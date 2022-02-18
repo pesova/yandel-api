@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use DB;
 use Illuminate\Http\Request;
+use App\Services\CardService;
+use App\Contracts\PaymentGatewayInterface;
 use App\Contracts\AuthServiceInterface as AuthService;
 use App\Contracts\DepositServiceInterface as DepositService;
 use App\Contracts\WithdrawalServiceInterface as WithdrawalService;
@@ -14,7 +16,7 @@ class TransactionController extends Controller
     /**
      * @var TransactionService $transactionService
      */
-    private $authService, $transactionService, $depositService, $withdrawalService;
+    private $authService, $transactionService, $depositService, $withdrawalService, $gateway, $cardService;
 
     /**
      * Inject Dependencies
@@ -23,13 +25,17 @@ class TransactionController extends Controller
         AuthService $authService,
         DepositService $depositService,
         WithdrawalService $withdrawalService,
-        TransactionService $transactionService
+        TransactionService $transactionService,
+        CardService $cardService,
+        PaymentGatewayInterface $gateway
     )
     {
         $this->authService = $authService;
         $this->depositService = $depositService;
         $this->withdrawalService = $withdrawalService;
         $this->transactionService = $transactionService;
+        $this->cardService = $cardService;
+        $this->gateway = $gateway;
     }
 
     /**
@@ -144,5 +150,14 @@ class TransactionController extends Controller
     {
         $req = $this->transactionService->findTransaction( $reference );
         return success('Transactions retrieved', $req);
+    }
+
+    public function handlePayment(Request $request){
+        $req = $this->gateway->verifyTransaction( $request->reference );
+        $this->cardService->saveCard( $req );
+        if ($req['status'] != 'success') {
+            return error('Transaction failed');
+        }
+        return success('Payment received', $req);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Services;
 use Auth;
 use Carbon\Carbon;
 use App\Models\Card;
+use App\Models\User;
 use App\Events\CardExpired;
 use App\Facades\PaymentGateway;
 use App\Contracts\CardServiceInterface;
@@ -56,9 +57,9 @@ class CardService extends BaseService implements CardServiceInterface
     {
         $email = $params['email'] ?? auth()->user()->email;
 
-        // TODO: validate the card first
-        if(! $this->gateway->validateCard($params['token'], $email, $amount) )
-            throw new CardServiceException(INSUFFICIENT_BALANCE);
+        // TODO: validate the card first, when live uncomment the below line
+        // if(! $this->gateway->validateCard($params['token'], $email, $amount) )
+        //     throw new CardServiceException(INSUFFICIENT_BALANCE);
 
         $charge = $this->gateway->chargeCard(
             $reference,
@@ -72,9 +73,9 @@ class CardService extends BaseService implements CardServiceInterface
     }
 
     public function saveCard(array $params){
-        $card = $this->card->withTrashed()->updateOrCreate(
+        return $this->card->withTrashed()->updateOrCreate(
             [
-                'user_id'=>$params['user_id'] ?? auth()->user()->id,
+                'user_id'=>$params['metadata']['user_id'] ?? auth()->user()->id,
                 'gateway'=>$params['gateway'],
                 'bank'=>$params['bank'],
                 'type'=>$params['card_type'],
@@ -88,7 +89,6 @@ class CardService extends BaseService implements CardServiceInterface
             ]
         );
 
-        return $card;
     }
 
     /**
@@ -101,16 +101,16 @@ class CardService extends BaseService implements CardServiceInterface
     public function deleteCard(int $authorization_id)
     {
         // delete internally
-        $card = auth()->user()->cards()->findOrFail($authorization_id);
+        $deleteCard = auth()->user()->cards()->findOrFail($authorization_id);
 
         // disable on gateway as well
         try{
-            $this->gateway->use($card->gateway)->deactivateCard( $card->token );
+            $this->gateway->use($deleteCard->gateway)->deactivateCard( $deleteCard->token );
         }catch(\Throwable $e){
-            handleThrowable($e, 'gateway', 'deleteCard', $card->toArray());
+            handleThrowable($e, 'gateway', 'deleteCard', $deleteCard->toArray());
         }
 
-        return $card->delete();
+        return $deleteCard->delete();
     }
 
     /**

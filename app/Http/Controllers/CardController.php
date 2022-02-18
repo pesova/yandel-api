@@ -132,6 +132,6 @@ class CardController extends Controller
             throw $e;
         }
 
-        return success('Card deleted successfully', $response);
+        return success('Card deleted successfully');
     }
 }

@@ -21,7 +21,7 @@ interface AuthServiceInterface
      * 
      * @return array
      */
-    public function login(array $request):array;
+    public function login(array $request);
 
     /**
      * Logout a user and invalidate access tokens

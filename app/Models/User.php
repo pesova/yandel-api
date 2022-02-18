@@ -15,7 +15,7 @@ class User extends Authenticatable
     use Notifiable, SoftDeletes;
 
     // For laravel passport
-    use HasApiTokens, Notifiable;
+    use HasApiTokens;
 
     /**
      * The attributes that are mass assignable.

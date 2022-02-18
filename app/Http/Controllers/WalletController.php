@@ -26,4 +26,16 @@ class WalletController extends Controller
 
         return success( 'success', $req );
     }
+
+    public function findWallet(int $wallie_id){
+        $req = $this->walletService->findUserWallet($wallie_id);
+
+        return success( 'success', $req );
+    }
+
+    public function creditUserWallet(){
+        $req = $this->walletService->credit();
+
+        return success( 'success', $req );
+    }
 }
