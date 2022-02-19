@@ -27,7 +27,8 @@ return [
             'public_key' => env('PAYSTACK_PUBLIC_KEY'),
             'private_key' => env('PAYSTACK_PRIVATE_KEY'),
             'encryption_key' => env('PAYSTACK_ENCRYPTION_KEY'),
-            'base_url' => env('PAYSTACK_URL', 'https://api.paystack.co')
+            'base_url' => env('PAYSTACK_URL', 'https://api.paystack.co'),
+            'CALLBACK_PAYMENT_URL' => env('CALLBACK_PAYMENT_URL')
         ],
 
         'rave' => [
