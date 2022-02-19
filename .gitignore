@@ -111,6 +111,5 @@ Homestead.json
 /vendor
 .env
 /public/.htaccess
-storage/*.key
 storage/api-docs
 storage/debugbar
