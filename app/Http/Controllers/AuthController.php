@@ -50,7 +50,7 @@ class AuthController extends Controller
         );
 
         // TODO: remove this before go-live
-        dd(app()->environment());
+        dd(app()->environment(), $req);
         return app()->environment() !== 'production'
                 ? success('OTP sent', ['token' => $req])
                 : success('OTP sent');
